@@ -5,7 +5,10 @@ class Program
     static void Main(string[] args)
     {
         //task 1
-        Task1();
+        // Task1();
+        
+        //task2 
+        Task2();
     }
 
     public static void Task1()
@@ -96,5 +99,39 @@ class Program
             Console.Clear();
             Task1();
         }
+    }
+    
+    //task2
+    public static void Task2()
+    {
+        // 153 == 1^3 + 5^3 + 3^3
+        int n;
+        do
+        {
+            Console.WriteLine("Enter a number greater than 0");
+            n = int.Parse(Console.ReadLine().Trim());
+        } while (n < 1);
+
+        for (int i = 1; i <= n; i++)
+        {
+            if(IsArmstrong(i))
+                Console.WriteLine($"{i} is Armstrong");
+        }
+    }
+
+    public static bool IsArmstrong(int number)
+    {
+        int newNumber = number;
+        int sum = 0;
+        int digitsCount = newNumber.ToString().Length;
+
+        for (int i = 0; i < digitsCount; i++)
+        {
+            int digit = newNumber % 10; // last digit
+            sum += (int)Math.Pow(digit * 1.0, digitsCount * 1.0); // not safe, but for my task it's ok, cuz I need number without decimal part 
+            newNumber /= 10; // decrease number to continue operations
+        }
+
+        return number == sum;
     }
 }
