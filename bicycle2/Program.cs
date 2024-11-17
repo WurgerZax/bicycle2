@@ -8,7 +8,17 @@ class Program
         // Task1();
         
         //task2 
-        Task2();
+        // Task2();
+        
+        //task3
+        Task3();
+    }
+    
+    public static int RandomValue()
+    {
+        Random random = new Random();
+        
+        return random.Next(9) + 1;
     }
 
     public static void Task1()
@@ -56,13 +66,6 @@ class Program
             
             AskToRepeat();
         }
-    }
-
-    public static int RandomValue()
-    {
-        Random random = new Random();
-        
-        return random.Next(9) + 1;
     }
 
     public static double GetCoefficient(int num1, int num2, int num3)
@@ -133,5 +136,48 @@ class Program
         }
 
         return number == sum;
+    }
+    
+    //task3
+    public static void Task3()
+    {
+        int password = ((RandomValue() * 10 + RandomValue()) * 10 + RandomValue()) * 10 + RandomValue();
+        Console.WriteLine("What's password?");
+        // Console.WriteLine($"my password is: {password}"); // for debug
+        while (true)
+        {
+            int userInput = int.Parse(Console.ReadLine().Trim());
+
+            if (userInput == password)
+            {
+                Console.WriteLine("You correct!");
+                break;
+            }
+            
+            Console.WriteLine(FindNumber(userInput, password));
+        }
+    }
+
+    // yeah yeah, naming is not good. My brain just leaked out
+    public static string FindNumber(int whatFind, int whereFind)
+    {
+        string result = "";
+
+        string strWhatFind = whatFind.ToString();
+        string strWhereFind = whereFind.ToString();
+        
+        for (int i = 0; i < strWhatFind.Length; i++)
+        {
+            if (strWhatFind[i] == strWhereFind[i])
+            {
+                result += strWhatFind[i];
+            }
+            else
+            {
+                result += "X";
+            }
+        }
+        
+        return result;
     }
 }
