@@ -139,23 +139,51 @@ class Program
     }
     
     //task3
-    public static void Task3()
+    public static void Task3(bool hack = false)
     {
         int password = ((RandomValue() * 10 + RandomValue()) * 10 + RandomValue()) * 10 + RandomValue();
         Console.WriteLine("What's password?");
         // Console.WriteLine($"my password is: {password}"); // for debug
-        while (true)
-        {
-            int userInput = int.Parse(Console.ReadLine().Trim());
 
-            if (userInput == password)
-            {
-                Console.WriteLine("You correct!");
-                break;
-            }
-            
-            Console.WriteLine(FindNumber(userInput, password));
+        bool userCorrect = AskUserInput(password);
+
+        if (userCorrect)
+        {
+            Console.WriteLine("You correct!");
         }
+
+        while (!userCorrect)
+        {
+            userCorrect = AskUserInput(password, hack);
+        }
+    }
+
+    public static bool AskUserInput(int password, bool hack = false)
+    {
+        int userInput;
+
+        if (hack)
+        {
+            userInput = HackNumber(password);
+        }
+        else
+        {
+            userInput = UserNumber();
+            CountSteps();
+        }
+
+        if (userInput == password)
+        {
+            return true;
+        }
+            
+        Console.WriteLine(FindNumber(userInput, password)); // pobochniy effect
+        return false;
+    }
+
+    public static int UserNumber()
+    {
+        return int.Parse(Console.ReadLine().Trim());
     }
 
     // yeah yeah, naming is not good. My brain just leaked out
@@ -179,5 +207,23 @@ class Program
         }
         
         return result;
+    }
+
+    public static void Task4()
+    {
+        // let's hack this sh*t!
+        int steps = 0;
+        
+        Task3(true);
+    }
+
+    public static int CountSteps(int steps = 0)
+    {
+        return steps += 1;
+    }
+
+    public static int HackNumber(int password)
+    {
+        return password;
     }
 }
