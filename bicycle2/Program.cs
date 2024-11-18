@@ -5,13 +5,16 @@ class Program
     static void Main(string[] args)
     {
         //task 1
-        // Task1();
+        Task1();
         
         //task2 
         // Task2();
         
         //task3
-        Task3();
+        // Task3();
+        
+        //task4
+        // Task4();
     }
     
     public static int RandomValue()
@@ -139,26 +142,45 @@ class Program
     }
     
     //task3
-    public static void Task3(bool hack = false)
+    public static void Task3()
     {
-        int password = ((RandomValue() * 10 + RandomValue()) * 10 + RandomValue()) * 10 + RandomValue();
-        Console.WriteLine("What's password?");
-        // Console.WriteLine($"my password is: {password}"); // for debug
+        int password = GeneratePassword();
 
-        bool userCorrect = AskUserInput(password);
-
-        if (userCorrect)
+        while (true)
         {
-            Console.WriteLine("You correct!");
-        }
-
-        while (!userCorrect)
-        {
-            userCorrect = AskUserInput(password, hack);
+            if (GuessThePassword(password, false))
+            {
+                break;                
+            }
         }
     }
 
-    public static bool AskUserInput(int password, bool hack = false)
+    public static int GeneratePassword()
+    {
+        return ((RandomValue() * 10 + RandomValue()) * 10 + RandomValue()) * 10 + RandomValue();
+    }
+
+    public static bool GuessThePassword(int password, bool hack = false)
+    {
+        Console.WriteLine("What's password?");
+        // Console.WriteLine($"my password is: {password}"); // for debug
+        
+        string userCorrect = AskUserInput(password, hack);
+        
+        if (!userCorrect.Contains("X"))
+        {
+            Console.WriteLine("You correct!");
+            return true;
+        }
+        else
+        {
+            Console.WriteLine(userCorrect);
+            gameLastOutput = userCorrect;
+            return false;
+        }
+    }
+
+    public static string AskUserInput(int password, bool hack = false)
     {
         int userInput;
 
@@ -169,16 +191,9 @@ class Program
         else
         {
             userInput = UserNumber();
-            CountSteps();
         }
-
-        if (userInput == password)
-        {
-            return true;
-        }
-            
-        Console.WriteLine(FindNumber(userInput, password)); // pobochniy effect
-        return false;
+        
+        return FindNumber(userInput, password);
     }
 
     public static int UserNumber()
@@ -212,18 +227,48 @@ class Program
     public static void Task4()
     {
         // let's hack this sh*t!
-        int steps = 0;
-        
-        Task3(true);
+        int password = GeneratePassword();
+
+        HackTheGame(password);
     }
 
-    public static int CountSteps(int steps = 0)
+    public static string gameLastOutput = "XXXX";
+    public static int hackNumberGuess = 1111;
+    
+    public static void HackTheGame(int password)
     {
-        return steps += 1;
+        int steps = 0;
+        
+        while (true)
+        {
+            steps += 1;
+            Console.WriteLine($"Hacker: \n\tStep: {steps}, guessing: {hackNumberGuess}");
+            if (GuessThePassword(password, true))
+            {
+                Console.WriteLine($"Hacker: \n\tHacked!. For {steps} steps");
+                break;                
+            }
+
+            string hackNumberGuessAsString = hackNumberGuess.ToString();
+
+            for (int i = 0; i < gameLastOutput.Length; i++)
+            {
+                if (gameLastOutput[i] == 'X')
+                {
+                    int currentDigit = int.Parse(hackNumberGuessAsString[i].ToString());
+
+                    currentDigit++;
+                    
+                    hackNumberGuessAsString = hackNumberGuessAsString.Remove(i, 1).Insert(i, currentDigit.ToString());
+                    
+                    hackNumberGuess = int.Parse(hackNumberGuessAsString);
+                }
+            }
+        }
     }
 
     public static int HackNumber(int password)
     {
-        return password;
+        return hackNumberGuess;
     }
 }
